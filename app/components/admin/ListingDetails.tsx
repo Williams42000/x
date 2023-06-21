@@ -62,7 +62,7 @@ return (
             <td className="py-2 px-4">{listing?.bathroomCount}</td>
           </tr>
           <tr className="border-b shadow-md">
-            <td className="py-2 px-4 text-indigo-500 font-semibold">Nombre maximum d'invités</td>
+            <td className="py-2 px-4 text-indigo-500 font-semibold">Nombre maximum d&apos;invités</td>
             <td className="py-2 px-4">{listing?.guestCount}</td>
           </tr>
           <tr className="border-b shadow-md">
