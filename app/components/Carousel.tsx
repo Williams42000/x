@@ -21,7 +21,7 @@ const CarouselComponent = () => {
 
   return (
     <div>
-      <h2>Carousel</h2>
+      
       <Slider {...settings}>
         {images.map((src, idx) => (
           <div key={idx}>
