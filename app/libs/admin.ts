@@ -1,6 +1,6 @@
 import prisma from './prismadb'
 import { NextResponse } from 'next/server';
-import { ObjectId } from 'mongodb';
+
 
 
 // lister tout logements
