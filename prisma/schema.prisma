@@ -1,0 +1,183 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String        @id @default(auto()) @map("_id") @db.ObjectId
+  email          String        @unique
+  name           String?
+  emailVerified  DateTime?
+  image          String?
+  hashedPassword String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+  favoriteIds    String[]      @db.ObjectId
+  role           Role          @default(USER)
+  accounts       Account[]
+  listings       Listing[]
+  reservations   Reservation[]
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.String
+  access_token      String? @db.String
+  expires_at        Int?
+  token_type        String?
+  scope             String
+  id_token          String? @db.String
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade) // Cascade permet de supprimer les comptes liés à un utilisateur si celui-ci est supprimé
+
+  @@unique([provider, providerAccountId])
+}
+
+model Listing {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  title         String
+  description   String
+  imageSrc      String
+  createdAt     DateTime @default(now())
+  category      String
+  roomCount     Int
+  bathroomCount Int
+  guestCount    Int
+  locationValue String
+  userId        String   @db.ObjectId
+  price         Int
+
+  user         User          @relation(fields: [userId], references: [id], onDelete: Cascade) // Cascade permet de supprimer les comptes liés à un utilisateur si celui-ci est supprimé
+  reservations Reservation[]
+}
+
+model Reservation {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  listingId  String   @db.ObjectId
+  userId     String   @db.ObjectId
+  startDate  DateTime
+  endDate    DateTime
+  totalPrice Int
+  createdAt  DateTime @default(now())
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+// RESUME:
+
+//Ce schéma Prisma définit 4 modèles principaux : `User`, `Account`, `Listing` et `Reservation`.
+//  Chacun de ces modèles représente une collection dans votre base de données MongoDB et définit la structure des données ainsi que les relations entre les collections.
+
+// Le modèle `User` représente les utilisateurs de votre application, le modèle `Account` représente les comptes associés aux utilisateurs pour les différentes méthodes d'authentification (géré par NextAuth.js),
+//  le modèle `Listing` représente les annonces créées par les utilisateurs et le modèle `Reservation` représente les réservations effectuées par les utilisateurs pour les annonces.
+
+// Les relations entre les modèles sont définies par des champs spécifiques dans chaque modèle, par exemple, le champ `accounts` dans le modèle `User` indique que chaque utilisateur peut avoir plusieurs comptes associés. 
+// Les autres relations sont définies de manière similaire.
+
+//DETAILS:
+
+// // // Générateur de client Prisma
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// // Configuration de la source de données (base de données MongoDB)
+// datasource db {
+//   provider = "mongodb"
+//   url      = env("DATABASE_URL")
+// }
+
+// // Modèle d'utilisateur
+// model User {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId // Identifiant unique de l'utilisateur
+//   email     String   @unique // Adresse e-mail de l'utilisateur, doit être unique
+//   name      String? // Nom de l'utilisateur (facultatif)
+//   emailVerified DateTime? // Date et heure de la vérification de l'e-mail (facultatif)
+//   image     String? // URL de l'image de profil de l'utilisateur (facultatif)
+//   hashedPassword String? // Mot de passe haché de l'utilisateur (facultatif)
+//   createdAt DateTime @default(now()) // Date et heure de création du compte utilisateur
+//   updatedAt DateTime @updatedAt // Date et heure de la dernière mise à jour du compte utilisateur
+//   favoriteIds String[] @db.ObjectId // Liste des identifiants des favoris de l'utilisateur
+
+//   // Relations entre les modèles
+//   accounts Account[] // Comptes liés à cet utilisateur
+//   listings Listing[] // Annonces créées par cet utilisateur
+//   reservations Reservation[] // Réservations effectuées par cet utilisateur
+// }
+
+// // Modèle de compte (géré automatiquement par NextAuth.js)
+// model Account {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId // Identifiant unique du compte
+//   userId    String   @db.ObjectId // Identifiant de l'utilisateur associé
+//   type      String // Type de compte
+//   provider  String // Fournisseur d'authentification du compte (ex: Google, Facebook, etc.)
+//   providerAccountId String // Identifiant du compte chez le fournisseur d'authentification
+//   refresh_token String? @db.String // Jeton d'actualisation (facultatif)
+//   access_token String? @db.String // Jeton d'accès (facultatif)
+//   expires_at Int? // Date d'expiration du jeton d'accès (facultatif)
+//   token_type String? // Type de jeton (facultatif)
+//   scope String // Portée du jeton d'accès
+//   id_token String? @db.String // Jeton d'identité (facultatif)
+//   session_state String? // État de la session (facultatif)
+
+//   // Relation entre les modèles
+//   user User @relation(fields: [userId], references: [id], onDelete: Cascade) // Utilisateur associé à ce compte
+
+//   // Contrainte d'unicité pour éviter les doublons
+//   @@unique([provider, providerAccountId])
+// }
+
+// // Modèle d'annonce
+// model Listing {
+//   id        String   @id @default(auto()) @map("_id") @db.ObjectId // Identifiant unique de l'annonce
+//   title     String // Titre de l'annonce
+//   description String // Description de l'annonce
+//   imageSrc  String // URL de l'image de l'annonce
+//   createdAt DateTime @default(now()) // Date et heure de création de l'annonce
+//   category String // Catégorie de l'annonce
+//   roomCount Int // Nombre de chambres
+//   bathroomCount Int // Nombre de salles de bain
+//   guestCount Int // Nombre d'invités autorisés
+// locationValue String // Valeur de l'emplacement de l'annonce (ex: adresse ou coordonnées)
+// userId String @db.ObjectId // Identifiant de l'utilisateur qui a créé l'annonce
+// price Int // Prix de l'annonce
+
+// // Relations entre les modèles
+// user User @relation(fields: [userId], references: [id], onDelete: Cascade) // Utilisateur ayant créé cette annonce
+// reservations Reservation[] // Réservations associées à cette annonce
+// }
+
+// // Modèle de réservation
+// model Reservation {
+// id String @id @default(auto()) @map("_id") @db.ObjectId // Identifiant unique de la réservation
+// listingId String @db.ObjectId // Identifiant de l'annonce réservée
+// userId String @db.ObjectId // Identifiant de l'utilisateur ayant effectué la réservation
+// startDate DateTime // Date de début de la réservation
+// endDate DateTime // Date de fin de la réservation
+// totalPrice Int // Prix total de la réservation
+// createdAt DateTime @default(now()) // Date et heure de création de la réservation
+
+// // Relations entre les modèles
+// listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade) // Annonce réservée
+// user User @relation(fields: [userId], references: [id], onDelete: Cascade) // Utilisateur ayant effectué la réservation
+// }
+
+// 
