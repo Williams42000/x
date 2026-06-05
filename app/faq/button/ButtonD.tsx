@@ -10,7 +10,7 @@ interface ButtonAProps {
 
 const ButtonA: React.FC<ButtonAProps> = ({ detailsText, contactText }) => {
   useEffect(() => {
-    initTE({ Collapse, Ripple });
+        new Collapse(document.getElementById('collapseD'));
   }, []);
 
   return (
@@ -21,8 +21,7 @@ const ButtonA: React.FC<ButtonAProps> = ({ detailsText, contactText }) => {
         data-te-collapse-init
         data-te-ripple-init
         data-te-ripple-color="light"
-            new Collapse(document.querySelectorAll('[data-te-collapse-init]'));
-        aria-expanded="false"
+                        aria-expanded="false"
         aria-controls="collapseExample"
       >
         {detailsText}
