@@ -21,7 +21,7 @@ const ButtonA: React.FC<ButtonAProps> = ({ detailsText, contactText }) => {
         data-te-collapse-init
         data-te-ripple-init
         data-te-ripple-color="light"
-        data-te-target="#collapseExample"
+            new Collapse(document.querySelectorAll('[data-te-collapse-init]'));
         aria-expanded="false"
         aria-controls="collapseExample"
       >
