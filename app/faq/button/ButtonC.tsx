@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Collapse, Ripple, initTE } from "tw-elements";
+import { Collapse } from "tw-elements";
 
 interface ButtonAProps {
   detailsText: string;
@@ -10,7 +10,7 @@ interface ButtonAProps {
 
 const ButtonA: React.FC<ButtonAProps> = ({ detailsText, contactText }) => {
   useEffect(() => {
-    initTE({ Collapse, Ripple });
+        new Collapse(document.querySelectorAll('[data-te-collapse-init]'));
   }, []);
 
   return (
