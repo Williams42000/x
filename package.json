@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "build": "prisma generate && next build",
+    "build": "prisma generate && next build",h
 
     "postinstall": "prisma generate",
 
@@ -46,7 +46,7 @@
     "react-slick": "^0.29.0",
     "react-spinners": "^0.13.8",
     "slick-carousel": "^1.8.1",
-    "tw-elements": "^1.0.0-beta2",
+        "tw-elements": "1.0.0",
     "typescript": "5.0.4",
     "typewriter-effect": "^2.20.1",
     "world-countries": "^4.0.0",
