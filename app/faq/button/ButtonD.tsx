@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Collapse, Ripple, initTE } from "tw-elements";
+import { Collapse } from "tw-elements";
 
 interface ButtonAProps {
   detailsText: string;
